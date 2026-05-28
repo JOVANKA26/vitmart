@@ -1,11 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:vitmart/main.dart';
-import 'package:vitmart/screens/home_screen.dart';
 import 'package:vitmart/screens/register_screen.dart';
 import 'package:vitmart/screens/admin_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vitmart/utils/encryption_helper.dart';
+import 'package:vitmart/utils/favorite_manager.dart'; // import FavoriteManager
+
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
 
@@ -47,6 +48,10 @@ class _SignInScreenState extends State<SignInScreen> {
       return;
     }
 
+    // ========== SET USER UNTUK FAVORITE MANAGER ==========
+    // Gunakan email sebagai userId (unik)
+    await FavoriteManager().setUser(inputEmail);
+
     // 🔀 ROUTING BERDASARKAN DOMAIN
     if (inputEmail.endsWith("@gmail.adm.co.id")) {
       Navigator.pushAndRemoveUntil(
@@ -87,14 +92,14 @@ class _SignInScreenState extends State<SignInScreen> {
 
             // LOGO
             Container(
-                height: 90,
-                width: 90,
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Center(child: Image.asset("images/vitmart.jpg")),
+              height: 90,
+              width: 90,
+              decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.circular(10),
               ),
+              child: Center(child: Image.asset("images/vitmart.jpg")),
+            ),
 
             const SizedBox(height: 20),
 

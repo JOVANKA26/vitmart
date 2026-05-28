@@ -32,7 +32,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       context,
     ).showSnackBar(const SnackBar(content: Text("Registrasi berhasil!")));
 
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => const SignInScreen()),
     );
@@ -57,7 +57,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             children: [
               const SizedBox(height: 10),
 
-              /// LOGO
+              // LOGO
               Container(
                 height: 90,
                 width: 90,
@@ -69,7 +69,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 20),
 
-              /// CARD REGISTER
+              // CARD REGISTER
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
@@ -81,7 +81,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    /// EMAIL
+                    // EMAIL
                     const Text(
                       "Email",
                       style: TextStyle(
@@ -105,7 +105,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     const SizedBox(height: 20),
 
-                    /// PASSWORD
+                    // PASSWORD
                     const Text(
                       "Password",
                       style: TextStyle(
@@ -130,7 +130,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     const SizedBox(height: 20),
 
-                    /// REGISTER BUTTON
+                    // REGISTER BUTTON
                     SizedBox(
                       width: double.infinity,
                       height: 50,
@@ -155,14 +155,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     RichText(
                       text: TextSpan(
                         text: 'Sudah punya akun? ',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                           color: Colors.deepPurple,
                         ),
                         children: <TextSpan>[
                           TextSpan(
                             text: 'Sign in di sini',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.blue,
                               decoration: TextDecoration.underline,
                               fontSize: 16,
@@ -180,7 +180,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
 
-                    /// GOOGLE BUTTON
+                    // GOOGLE BUTTON (placeholder)
                     SizedBox(
                       width: double.infinity,
                       height: 50,

@@ -3,6 +3,7 @@ import 'package:vitmart/main.dart';
 import 'package:vitmart/screens/edit_profile_screen.dart';
 import 'package:vitmart/screens/signin_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vitmart/utils/favorite_manager.dart'; // <-- tambahan import
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -135,6 +136,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               onPressed: () async {
+                // ===== TAMBAHAN: hapus data favorit =====
+                await FavoriteManager().clear();
+                // ========================================
                 await SharedPreferences.getInstance();
 
                 Navigator.push(
