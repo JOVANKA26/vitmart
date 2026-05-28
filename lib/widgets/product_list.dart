@@ -15,7 +15,7 @@ class ProductList extends StatelessWidget {
     const mainan = ['Hot Wheels', 'Uno', 'Kartu Pokemon', 'Kartu Boboiboy'];
     if (makanan.contains(productName)) return 'Makanan';
     if (minuman.contains(productName)) return 'Minuman';
-    if (obat.contains(productName)) return 'Suplemen';
+    if (obat.contains(productName)) return 'Obat-obatan';
     if (mainan.contains(productName)) return 'Mainan';
     return 'Makanan';
   }
@@ -132,7 +132,7 @@ class ProductList extends StatelessWidget {
           String targetCategory = '';
           if (selectedCategory == '1') targetCategory = 'Makanan';
           else if (selectedCategory == '2') targetCategory = 'Minuman';
-          else if (selectedCategory == '3') targetCategory = 'Suplemen';
+          else if (selectedCategory == '3') targetCategory = 'Obat-obatan';
           else if (selectedCategory == '4') targetCategory = 'Mainan';
           filteredByCat = products.where((p) => _getCategory(p["name"]!) == targetCategory).toList();
         }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:vitmart/screens/detail.screen.dart';
 import '../models/product.dart';
 import '../utils/favorite_manager.dart';
-import '../screens/detail.screen.dart';
 
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
@@ -13,7 +12,7 @@ class FavoriteScreen extends StatefulWidget {
 
 class _FavoriteScreenState extends State<FavoriteScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final List<String> _tabs = ['Semua', 'Makanan', 'Minuman', 'Suplemen'];
+  final List<String> _tabs = ['Semua', 'Makanan', 'Minuman', 'Obat-obatan'];
   final favManager = FavoriteManager();
 
   @override
@@ -36,17 +35,39 @@ class _FavoriteScreenState extends State<FavoriteScreen> with SingleTickerProvid
     return all.where((p) => p.category == tab).toList();
   }
 
-  void _removeFavorite(Product product) {
-    favManager.removeFavorite(product);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${product.name} dihapus dari favorit'),
-        action: SnackBarAction(
-          label: 'Batal',
-          onPressed: () => favManager.addFavorite(product),
-        ),
-        duration: const Duration(seconds: 3),
-      ),
+  // Menampilkan dialog konfirmasi sebelum menghapus
+  void _confirmRemoveFavorite(Product product) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Hapus dari favorit'),
+          content: Text('Apakah Anda yakin ingin menghapus ${product.name} dari daftar favorit?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(), // Tidak jadi hapus
+              child: const Text('Tidak'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // tutup dialog
+                favManager.removeFavorite(product); // hapus produk
+                // Optional: tampilkan snackbar notifikasi
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('${product.name} dihapus dari favorit'),
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
+              },
+              child: const Text(
+                'Ya',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -120,7 +141,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with SingleTickerProvid
                           return _FavoriteItem(
                             product: product,
                             formatRupiah: _formatRupiah,
-                            onRemove: () => _removeFavorite(product),
+                            onRemove: () => _confirmRemoveFavorite(product), // ganti ke dialog
                             onAddToCart: () => _addToCart(product),
                             onTap: () {
                               Navigator.push(
@@ -140,7 +161,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> with SingleTickerProvid
   }
 }
 
-// Item card favorit (sama seperti sebelumnya, tapi dengan onTap)
 class _FavoriteItem extends StatelessWidget {
   final Product product;
   final String Function(double) formatRupiah;

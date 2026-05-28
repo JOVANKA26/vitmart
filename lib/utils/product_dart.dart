@@ -85,7 +85,7 @@ List<Product> allProducts = [
   Product(
     id: '9',
     name: 'Mylanta',
-    category: 'Suplemen',
+    category: 'Obat-obatan',
     subCategory: 'Obat Maag',
     emoji: '💊',
     price: 5000,
@@ -95,7 +95,7 @@ List<Product> allProducts = [
   Product(
     id: '10',
     name: 'OBH Combi',
-    category: 'Suplemen',
+    category: 'Obat-obatan',
     subCategory: 'Obat Batuk',
     emoji: '🌿',
     price: 18000,
@@ -105,7 +105,7 @@ List<Product> allProducts = [
   Product(
     id: '11',
     name: 'Tolak Angin',
-    category: 'Suplemen',
+    category: 'Obat-obatan',
     subCategory: 'Herbal',
     emoji: '🌱',
     price: 2500,
@@ -115,7 +115,7 @@ List<Product> allProducts = [
   Product(
     id: '12',
     name: 'Oskadon',
-    category: 'Suplemen',
+    category: 'Obat-obatan',
     subCategory: 'Obat',
     emoji: '💊',
     price: 12500,
