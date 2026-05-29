@@ -3,7 +3,7 @@ import 'package:vitmart/main.dart';
 import 'package:vitmart/screens/edit_profile_screen.dart';
 import 'package:vitmart/screens/signin_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vitmart/utils/favorite_manager.dart'; // <-- tambahan import
+import 'package:vitmart/utils/favorite_manager.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});

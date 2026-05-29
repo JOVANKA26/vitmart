@@ -7,8 +7,8 @@ import 'package:vitmart/screens/profile_screen.dart';
 import 'package:vitmart/screens/admin_screen.dart';
 import 'package:vitmart/screens/signin_screen.dart';
 import 'package:vitmart/screens/splash_screen.dart';
-import 'package:vitmart/utils/favorite_manager.dart'; // Import FavoriteManager
-import 'package:vitmart/models/product.dart'; // Model Product
+import 'package:vitmart/utils/favorite_manager.dart';
+import 'package:vitmart/models/product.dart'; 
 
 void main() {
   runApp(const MyAppStart());

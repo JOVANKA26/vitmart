@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vitmart/models/product.dart';
 import 'package:vitmart/screens/detail.screen.dart';
-import '../utils/category_manager.dart';
+import 'package:vitmart/utils/category_manager.dart';
 
 class ProductList extends StatelessWidget {
   final String searchQuery;

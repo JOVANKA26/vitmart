@@ -5,7 +5,7 @@ import 'package:vitmart/screens/signin_screen.dart';
 import 'package:vitmart/screens/admin_screen.dart';
 import 'package:vitmart/utils/encryption_helper.dart';
 import 'package:vitmart/utils/favorite_manager.dart';
-import 'package:vitmart/utils/cart_manager.dart'; // tambahkan
+import 'package:vitmart/utils/cart_manager.dart'; 
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
