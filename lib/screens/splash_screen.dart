@@ -5,6 +5,7 @@ import 'package:vitmart/screens/signin_screen.dart';
 import 'package:vitmart/screens/admin_screen.dart';
 import 'package:vitmart/utils/encryption_helper.dart';
 import 'package:vitmart/utils/favorite_manager.dart';
+import 'package:vitmart/utils/cart_manager.dart'; // tambahkan
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -21,14 +22,12 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _checkLoginAndNavigate() async {
-    // Tunggu 2 detik agar splash terlihat
     await Future.delayed(const Duration(seconds: 2));
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? encryptedEmail = prefs.getString("email");
     String? encryptedPassword = prefs.getString("password");
 
-    // Jika belum ada akun tersimpan
     if (encryptedEmail == null || encryptedPassword == null) {
       if (mounted) {
         Navigator.pushReplacement(
@@ -39,14 +38,12 @@ class _SplashScreenState extends State<SplashScreen> {
       return;
     }
 
-    // Dekripsi email
     String email = EncryptionHelper.decryptText(encryptedEmail);
-    // (password tidak diperlukan untuk routing, hanya untuk validasi)
 
-    // Set user ke FavoriteManager (agar favorit dimuat)
+    // Set user untuk FavoriteManager dan CartManager
     await FavoriteManager().setUser(email);
+    await CartManager().setUser(email); // <-- tambahkan ini
 
-    // Routing berdasarkan domain email
     if (email.endsWith("@gmail.adm.co.id")) {
       if (mounted) {
         Navigator.pushReplacement(
@@ -62,7 +59,6 @@ class _SplashScreenState extends State<SplashScreen> {
         );
       }
     } else {
-      // Domain tidak dikenali, minta login ulang
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -75,21 +71,14 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE91D1D), // background merah
+      backgroundColor: const Color(0xFFE91D1D),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Logo
-            Image.asset(
-              "images/vitmart.jpg",
-              width: 180,
-            ),
+            Image.asset("images/vitmart.jpg", width: 180),
             const SizedBox(height: 20),
-            // Loading indicator
-            const CircularProgressIndicator(
-              color: Colors.white,
-            ),
+            const CircularProgressIndicator(color: Colors.white),
           ],
         ),
       ),

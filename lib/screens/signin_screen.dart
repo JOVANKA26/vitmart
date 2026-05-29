@@ -5,7 +5,8 @@ import 'package:vitmart/screens/register_screen.dart';
 import 'package:vitmart/screens/admin_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vitmart/utils/encryption_helper.dart';
-import 'package:vitmart/utils/favorite_manager.dart'; // import FavoriteManager
+import 'package:vitmart/utils/favorite_manager.dart';
+import 'package:vitmart/utils/cart_manager.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -48,9 +49,9 @@ class _SignInScreenState extends State<SignInScreen> {
       return;
     }
 
-    // ========== SET USER UNTUK FAVORITE MANAGER ==========
-    // Gunakan email sebagai userId (unik)
+    // ========== SET USER UNTUK FAVORITE MANAGER DAN CART MANAGER ==========
     await FavoriteManager().setUser(inputEmail);
+    await CartManager().setUser(inputEmail);
 
     // 🔀 ROUTING BERDASARKAN DOMAIN
     if (inputEmail.endsWith("@gmail.adm.co.id")) {

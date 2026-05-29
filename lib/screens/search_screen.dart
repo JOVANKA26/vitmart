@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../widgets/search_bar.dart';
+import 'package:vitmart/models/product.dart';
+import 'package:vitmart/utils/cart_manager.dart';
+import 'package:vitmart/widgets/search_bar.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -11,98 +13,173 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   String searchQuery = "";
 
-  // CART SEMENTARA
-  final List<Map<String, String>> cartItems = [];
-
-  final List<Map<String, String>> products = [
-    {
-      "image": "images/Chitato.jpg",
-      "name": "Chitato",
-      "price": "RP 10.000",
-    },
-    {
-      "image": "images/Bigbabol.jpg",
-      "name": "Big Babol",
-      "price": "RP 2.500",
-    },
-    {
-      "image": "images/Kacang.jpg",
-      "name": "Kacang Garuda",
-      "price": "RP 7.000",
-    },
-    {
-      "image": "images/Khongguan.jpg",
-      "name": "Khong Guan",
-      "price": "RP 55.000",
-    },
-    {
-      "image": "images/Cocacola.jpg",
-      "name": "Cocacola",
-      "price": "RP 6.000",
-    },
-    {
-      "image": "images/Fanta.jpg",
-      "name": "Fanta",
-      "price": "RP 11.000",
-    },
-    {
-      "image": "images/Golda.png",
-      "name": "Golda",
-      "price": "RP 5.000",
-    },
-    {
-      "image": "images/Minerale.webp",
-      "name": "Le Minerale",
-      "price": "RP 8.000",
-    },
-    {
-      "image": "images/Mylanta.jpg",
-      "name": "Mylanta",
-      "price": "RP 5.000",
-    },
-    {
-      "image": "images/Obhcombi.webp",
-      "name": "OBH Combi",
-      "price": "RP 18.000",
-    },
-    {
-      "image": "images/Tolakangin.jpg",
-      "name": "Tolak Angin",
-      "price": "RP 2.500",
-    },
-    {
-      "image": "images/Oskadon.jpg",
-      "name": "Oskadon",
-      "price": "RP 12.500",
-    },
-    {
-      "image": "images/Hotwheels.webp",
-      "name": "Hot Wheels",
-      "price": "RP 30.000",
-    },
-    {
-      "image": "images/Uno.webp",
-      "name": "Uno",
-      "price": "RP 15.000",
-    },
-    {
-      "image": "images/Pokemon.webp",
-      "name": "Kartu Pokemon",
-      "price": "RP 25.000",
-    },
-    {
-      "image": "images/Boboiboy.jpg",
-      "name": "Kartu Boboiboy",
-      "price": "RP 20.000",
-    },
+  final List<Product> products = [
+    Product(
+      id: '1',
+      name: 'Chitato',
+      price: 10000,
+      category: 'Makanan',
+      subCategory: 'Snack',
+      emoji: '🍟',
+      description: 'Keripik kentang premium.',
+      imageUrl: 'images/Chitato.jpg',
+    ),
+    Product(
+      id: '2',
+      name: 'Big Babol',
+      price: 2500,
+      category: 'Makanan',
+      subCategory: 'Permen',
+      emoji: '🍬',
+      description: 'Permen susu kenyal.',
+      imageUrl: 'images/Bigbabol.jpg',
+    ),
+    Product(
+      id: '3',
+      name: 'Kacang Garuda',
+      price: 7000,
+      category: 'Makanan',
+      subCategory: 'Snack',
+      emoji: '🥜',
+      description: 'Kacang gurih.',
+      imageUrl: 'images/Kacang.jpg',
+    ),
+    Product(
+      id: '4',
+      name: 'Khong Guan',
+      price: 55000,
+      category: 'Makanan',
+      subCategory: 'Biskuit',
+      emoji: '🍪',
+      description: 'Biskuit asin.',
+      imageUrl: 'images/Khongguan.jpg',
+    ),
+    Product(
+      id: '5',
+      name: 'Cocacola',
+      price: 6000,
+      category: 'Minuman',
+      subCategory: 'Soda',
+      emoji: '🥤',
+      description: 'Minuman bersoda.',
+      imageUrl: 'images/Cocacola.jpg',
+    ),
+    Product(
+      id: '6',
+      name: 'Fanta',
+      price: 11000,
+      category: 'Minuman',
+      subCategory: 'Soda',
+      emoji: '🍊',
+      description: 'Minuman rasa jeruk.',
+      imageUrl: 'images/Fanta.jpg',
+    ),
+    Product(
+      id: '7',
+      name: 'Golda',
+      price: 5000,
+      category: 'Minuman',
+      subCategory: 'Susu',
+      emoji: '🥛',
+      description: 'Susu kotak.',
+      imageUrl: 'images/Golda.png',
+    ),
+    Product(
+      id: '8',
+      name: 'Le Minerale',
+      price: 8000,
+      category: 'Minuman',
+      subCategory: 'Air Mineral',
+      emoji: '💧',
+      description: 'Air mineral.',
+      imageUrl: 'images/Minerale.webp',
+    ),
+    Product(
+      id: '9',
+      name: 'Mylanta',
+      price: 5000,
+      category: 'Suplemen',
+      subCategory: 'Obat Maag',
+      emoji: '💊',
+      description: 'Obat maag.',
+      imageUrl: 'images/Mylanta.jpg',
+    ),
+    Product(
+      id: '10',
+      name: 'OBH Combi',
+      price: 18000,
+      category: 'Suplemen',
+      subCategory: 'Obat Batuk',
+      emoji: '🌿',
+      description: 'Obat batuk.',
+      imageUrl: 'images/Obhcombi.webp',
+    ),
+    Product(
+      id: '11',
+      name: 'Tolak Angin',
+      price: 2500,
+      category: 'Suplemen',
+      subCategory: 'Herbal',
+      emoji: '🌱',
+      description: 'Herbal masuk angin.',
+      imageUrl: 'images/Tolakangin.jpg',
+    ),
+    Product(
+      id: '12',
+      name: 'Oskadon',
+      price: 12500,
+      category: 'Suplemen',
+      subCategory: 'Obat',
+      emoji: '💊',
+      description: 'Parasetamol.',
+      imageUrl: 'images/Oskadon.jpg',
+    ),
+    Product(
+      id: '13',
+      name: 'Hot Wheels',
+      price: 30000,
+      category: 'Mainan',
+      subCategory: 'Mobil',
+      emoji: '🚗',
+      description: 'Mobil die-cast.',
+      imageUrl: 'images/Hotwheels.webp',
+    ),
+    Product(
+      id: '14',
+      name: 'Uno',
+      price: 15000,
+      category: 'Mainan',
+      subCategory: 'Kartu',
+      emoji: '🃏',
+      description: 'Kartu permainan.',
+      imageUrl: 'images/Uno.webp',
+    ),
+    Product(
+      id: '15',
+      name: 'Kartu Pokemon',
+      price: 25000,
+      category: 'Mainan',
+      subCategory: 'Kartu',
+      emoji: '⚡',
+      description: 'Kartu koleksi.',
+      imageUrl: 'images/Pokemon.webp',
+    ),
+    Product(
+      id: '16',
+      name: 'Kartu Boboiboy',
+      price: 20000,
+      category: 'Mainan',
+      subCategory: 'Kartu',
+      emoji: '🌀',
+      description: 'Kartu Boboiboy.',
+      imageUrl: 'images/Boboiboy.jpg',
+    ),
   ];
 
   @override
   Widget build(BuildContext context) {
     final filteredProducts = products.where((product) {
-      return product["name"]!
-          .toLowerCase()
-          .contains(searchQuery.toLowerCase());
+      return product.name.toLowerCase().contains(searchQuery.toLowerCase());
     }).toList();
 
     return Scaffold(
@@ -110,7 +187,6 @@ class _SearchScreenState extends State<SearchScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // ================= SEARCH BAR + BACK =================
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: SearchBarWidget(
@@ -126,8 +202,6 @@ class _SearchScreenState extends State<SearchScreen> {
                 },
               ),
             ),
-
-            // ================= HASIL SEARCH =================
             Expanded(
               child: filteredProducts.isEmpty
                   ? const Center(
@@ -141,102 +215,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       itemCount: filteredProducts.length,
                       itemBuilder: (context, index) {
                         final product = filteredProducts[index];
-
-                        return Container(
-                          margin: const EdgeInsets.only(bottom: 16),
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(14),
-                            border: Border.all(color: Colors.white12),
-                          ),
-                          child: Row(
-                            children: [
-                              // IMAGE
-                              ClipRRect(
-                                borderRadius:
-                                    const BorderRadius.horizontal(
-                                  left: Radius.circular(14),
-                                ),
-                                child: Image.asset(
-                                  product["image"]!,
-                                  width: 110,
-                                  height: 110,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-
-                              const SizedBox(width: 12),
-
-                              // INFO + BUTTON
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 8),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        product["name"]!,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      const SizedBox(height: 6),
-                                      Text(
-                                        product["price"]!,
-                                        style: const TextStyle(
-                                          color: Colors.white70,
-                                          fontSize: 13,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 10),
-
-                                      // ADD TO CART BUTTON
-                                      SizedBox(
-                                        height: 36,
-                                        child: ElevatedButton.icon(
-                                          onPressed: () {
-                                            setState(() {
-                                              cartItems.add(product);
-                                            });
-
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                    "${product["name"]} ditambahkan ke keranjang"),
-                                                duration:
-                                                    const Duration(seconds: 1),
-                                              ),
-                                            );
-                                          },
-                                          icon: const Icon(
-                                            Icons.add_shopping_cart,
-                                            size: 18,
-                                          ),
-                                          label: const Text("Add"),
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.white,
-                                            foregroundColor: Colors.black,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
+                        return _buildProductItem(product);
                       },
                     ),
             ),
@@ -244,5 +223,91 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildProductItem(Product product) {
+    final cartManager = CartManager();
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: Colors.black,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.white12),
+      ),
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: const BorderRadius.horizontal(left: Radius.circular(14)),
+            child: Image.asset(
+              product.imageUrl,
+              width: 110,
+              height: 110,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => const Icon(Icons.image, color: Colors.white70),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    product.name,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    _formatRupiah(product.price),
+                    style: const TextStyle(color: Colors.white70, fontSize: 13),
+                  ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    height: 36,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        // Hanya tambah ke keranjang, tidak pindah halaman
+                        cartManager.addToCart(product);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('${product.name} ditambahkan ke keranjang'),
+                            duration: const Duration(seconds: 1),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.add_shopping_cart, size: 18),
+                      label: const Text("Add"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatRupiah(double price) {
+    final formatted = price.toStringAsFixed(0).replaceAllMapped(
+      RegExp(r'(\d)(?=(\d{3})+$)'),
+      (m) => '${m[1]}.',
+    );
+    return 'Rp $formatted';
   }
 }

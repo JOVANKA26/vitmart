@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../widgets/search_bar.dart';
-import '../widgets/banner_slider.dart';
-import '../widgets/category_list.dart';
-import '../widgets/product_list.dart';
+import 'package:vitmart/widgets/search_bar.dart';
+import 'package:vitmart/widgets/banner_slider.dart';
+import 'package:vitmart/widgets/category_list.dart';
+import 'package:vitmart/widgets/product_list.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../screens/search_screen.dart';
+import 'package:vitmart/screens/search_screen.dart';
 
 class SearchBarWidget extends StatelessWidget {
   // ====================

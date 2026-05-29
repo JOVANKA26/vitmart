@@ -2,7 +2,7 @@
 class Product {
   final String id;
   final String name;
-  final String category;     // 'Makanan', 'Minuman', 'Suplemen'
+  final String category;
   final String subCategory;
   final String emoji;
   final double price;

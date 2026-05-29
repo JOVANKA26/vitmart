@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:vitmart/screens/detail.screen.dart';
-import '../models/product.dart';
-import '../utils/favorite_manager.dart';
+import 'package:vitmart/screens/cart_screen.dart';
+import 'package:vitmart/models/product.dart';
+import 'package:vitmart/utils/favorite_manager.dart';
+import 'package:vitmart/utils/cart_manager.dart';
 
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
@@ -14,6 +16,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with SingleTickerProvid
   late TabController _tabController;
   final List<String> _tabs = ['Semua', 'Makanan', 'Minuman', 'Obat-obatan'];
   final favManager = FavoriteManager();
+  final cartManager = CartManager();
 
   @override
   void initState() {
@@ -35,7 +38,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> with SingleTickerProvid
     return all.where((p) => p.category == tab).toList();
   }
 
-  // Menampilkan dialog konfirmasi sebelum menghapus
   void _confirmRemoveFavorite(Product product) {
     showDialog(
       context: context,
@@ -44,26 +46,16 @@ class _FavoriteScreenState extends State<FavoriteScreen> with SingleTickerProvid
           title: const Text('Hapus dari favorit'),
           content: Text('Apakah Anda yakin ingin menghapus ${product.name} dari daftar favorit?'),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(), // Tidak jadi hapus
-              child: const Text('Tidak'),
-            ),
+            TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Tidak')),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // tutup dialog
-                favManager.removeFavorite(product); // hapus produk
-                // Optional: tampilkan snackbar notifikasi
+                Navigator.of(context).pop();
+                favManager.removeFavorite(product);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('${product.name} dihapus dari favorit'),
-                    duration: const Duration(seconds: 2),
-                  ),
+                  SnackBar(content: Text('${product.name} dihapus dari favorit'), duration: const Duration(seconds: 2)),
                 );
               },
-              child: const Text(
-                'Ya',
-                style: TextStyle(color: Colors.red),
-              ),
+              child: const Text('Ya', style: TextStyle(color: Colors.red)),
             ),
           ],
         );
@@ -71,21 +63,26 @@ class _FavoriteScreenState extends State<FavoriteScreen> with SingleTickerProvid
     );
   }
 
-  void _addToCart(Product product) {
+  void _addToCartAndGoToCart(Product product) {
+    cartManager.addToCart(product);
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${product.name} ditambahkan ke keranjang'),
-        backgroundColor: const Color(0xFFE53E3E),
-        duration: const Duration(seconds: 2),
-      ),
+      SnackBar(content: Text('${product.name} ditambahkan ke keranjang'), backgroundColor: const Color(0xFFE53E3E)),
     );
+    Navigator.push(context, MaterialPageRoute(builder: (_) => const CartScreen()));
+  }
+
+  Future<void> _searchFavorites() async {
+    final Product? selected = await showSearch<Product?>(
+      context: context,
+      delegate: FavoriteSearchDelegate(favorites: favManager.favorites.value),
+    );
+    if (selected != null) {
+      Navigator.push(context, MaterialPageRoute(builder: (_) => DetailScreen(product: selected)));
+    }
   }
 
   String _formatRupiah(double price) {
-    final formatted = price.toStringAsFixed(0).replaceAllMapped(
-      RegExp(r'(\d)(?=(\d{3})+$)'),
-      (m) => '${m[1]}.',
-    );
+    final formatted = price.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+$)'), (m) => '${m[1]}.');
     return 'Rp $formatted';
   }
 
@@ -100,13 +97,11 @@ class _FavoriteScreenState extends State<FavoriteScreen> with SingleTickerProvid
         leading: const BackButton(color: Colors.white),
         title: const Text('Favorit', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.search, color: Colors.white),
-            onPressed: () {},
-          ),
+          IconButton(icon: const Icon(Icons.search, color: Colors.white), onPressed: _searchFavorites),
         ],
         bottom: TabBar(
           controller: _tabController,
+          isScrollable: true,
           tabs: _tabs.map((t) => Tab(text: t)).toList(),
           labelColor: const Color(0xFFE53E3E),
           unselectedLabelColor: Colors.grey,
@@ -125,10 +120,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with SingleTickerProvid
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(14, 10, 14, 6),
-                child: Text(
-                  '${filtered.length} produk disimpan',
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
-                ),
+                child: Text('${filtered.length} produk disimpan', style: const TextStyle(fontSize: 12, color: Colors.grey)),
               ),
               Expanded(
                 child: filtered.isEmpty
@@ -141,14 +133,9 @@ class _FavoriteScreenState extends State<FavoriteScreen> with SingleTickerProvid
                           return _FavoriteItem(
                             product: product,
                             formatRupiah: _formatRupiah,
-                            onRemove: () => _confirmRemoveFavorite(product), // ganti ke dialog
-                            onAddToCart: () => _addToCart(product),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (_) => DetailScreen(product: product)),
-                              );
-                            },
+                            onRemove: () => _confirmRemoveFavorite(product),
+                            onAddToCart: () => _addToCartAndGoToCart(product),
+                            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => DetailScreen(product: product))),
                           );
                         },
                       ),
@@ -161,6 +148,63 @@ class _FavoriteScreenState extends State<FavoriteScreen> with SingleTickerProvid
   }
 }
 
+// ========== SEARCH DELEGATE ==========
+class FavoriteSearchDelegate extends SearchDelegate<Product?> {
+  final List<Product> favorites;
+
+  FavoriteSearchDelegate({required this.favorites});
+
+  @override
+  List<Widget>? buildActions(BuildContext context) => [IconButton(icon: const Icon(Icons.clear), onPressed: () => query = '')];
+
+  @override
+  Widget? buildLeading(BuildContext context) => IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => close(context, null));
+
+  @override
+  Widget buildResults(BuildContext context) {
+    final results = favorites.where((p) => p.name.toLowerCase().contains(query.toLowerCase())).toList();
+    return _buildResultList(results);
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final suggestions = favorites.where((p) => p.name.toLowerCase().contains(query.toLowerCase())).toList();
+    return _buildResultList(suggestions);
+  }
+
+  Widget _buildResultList(List<Product> products) {
+    if (products.isEmpty) return const Center(child: Text('Produk favorit tidak ditemukan'));
+    return ListView.builder(
+      itemCount: products.length,
+      itemBuilder: (context, index) {
+        final p = products[index];
+        return ListTile(
+          leading: ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.asset(
+              p.imageUrl,
+              width: 50,
+              height: 50,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => Text(p.emoji, style: const TextStyle(fontSize: 30)),
+            ),
+          ),
+          title: Text(p.name),
+          subtitle: Text('${p.category} · ${p.subCategory}'),
+          trailing: Text(_formatRupiah(p.price)),
+          onTap: () => close(context, p),
+        );
+      },
+    );
+  }
+
+  String _formatRupiah(double price) {
+    final formatted = price.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+$)'), (m) => '${m[1]}.');
+    return 'Rp $formatted';
+  }
+}
+
+// ========== WIDGET ITEM FAVORIT DENGAN GAMBAR ==========
 class _FavoriteItem extends StatelessWidget {
   final Product product;
   final String Function(double) formatRupiah;
@@ -185,15 +229,21 @@ class _FavoriteItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         child: Row(
           children: [
-            Container(
-              width: 64,
-              height: 64,
-              decoration: BoxDecoration(
-                color: const Color(0xFFF0F0F0),
-                borderRadius: BorderRadius.circular(10),
+            // GAMBAR PRODUK (bukan emoji)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.asset(
+                product.imageUrl,
+                width: 64,
+                height: 64,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Container(
+                  width: 64,
+                  height: 64,
+                  color: const Color(0xFFF0F0F0),
+                  child: Center(child: Text(product.emoji, style: const TextStyle(fontSize: 30))),
+                ),
               ),
-              alignment: Alignment.center,
-              child: Text(product.emoji, style: const TextStyle(fontSize: 30)),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -247,6 +297,7 @@ class _FavoriteItem extends StatelessWidget {
   }
 }
 
+// ========== EMPTY STATE ==========
 class _EmptyFavorite extends StatelessWidget {
   const _EmptyFavorite();
 
@@ -258,10 +309,7 @@ class _EmptyFavorite extends StatelessWidget {
         children: [
           Icon(Icons.favorite_outline, size: 64, color: Colors.grey.shade300),
           const SizedBox(height: 16),
-          Text(
-            'Belum ada produk favorit',
-            style: TextStyle(fontSize: 15, color: Colors.grey.shade500),
-          ),
+          Text('Belum ada produk favorit', style: TextStyle(fontSize: 15, color: Colors.grey.shade500)),
           const SizedBox(height: 8),
           Text(
             'Tap ikon ❤️ pada produk untuk\nmenambahkannya ke favorit',

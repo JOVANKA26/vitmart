@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:vitmart/screens/signin_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../utils/encryption_helper.dart';
+import 'package:vitmart/utils/encryption_helper.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});

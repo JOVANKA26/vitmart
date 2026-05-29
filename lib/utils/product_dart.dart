@@ -1,5 +1,5 @@
 // lib/utils/product_data.dart
-import '../models/product.dart';
+import 'package:vitmart/models/product.dart';
 
 List<Product> allProducts = [
   Product(

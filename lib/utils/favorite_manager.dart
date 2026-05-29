@@ -1,7 +1,7 @@
 // lib/utils/favorite_manager.dart
 import 'package:flutter/material.dart';
-import 'favorite_storage.dart';
-import '../models/product.dart';
+import 'package:vitmart/utils/favorite_storage.dart';
+import 'package:vitmart/models/product.dart';
 
 class FavoriteManager {
   static final FavoriteManager _instance = FavoriteManager._internal();

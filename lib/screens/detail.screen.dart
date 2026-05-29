@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
-import '../models/product.dart';
-import '../utils/favorite_manager.dart';
-import 'favorite_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vitmart/models/product.dart';
+import 'package:vitmart/models/cart_item.dart'; // tambahkan
+import 'package:vitmart/utils/favorite_manager.dart';
+import 'package:vitmart/utils/cart_manager.dart';
+import 'package:vitmart/screens/favorite_screen.dart';
+import 'package:vitmart/screens/cart_screen.dart';
+import 'payment_screen.dart';
 
+// ========== DetailScreen ==========
 class DetailScreen extends StatelessWidget {
   final Product product;
   const DetailScreen({super.key, required this.product});
@@ -10,6 +16,51 @@ class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final favManager = FavoriteManager();
+    final cartManager = CartManager();
+
+    void _showAddToCartDialog() {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Pilihan Belanja'),
+            content: Text('${product.name} akan ditambahkan ke keranjang.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  cartManager.addToCart(product);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('${product.name} ditambahkan ke keranjang')),
+                  );
+                  // Gunakan subtotal dari CartManager yang sudah menghitung quantity
+                  double subtotal = cartManager.subtotal;
+                  const int pajak = 2500;
+                  int total = (subtotal + pajak).toInt();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => PaymentScreen(total: total, method: "Transfer Bank"),
+                    ),
+                  );
+                },
+                child: const Text('Langsung Checkout'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  cartManager.addToCart(product);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('${product.name} ditambahkan ke keranjang')),
+                  );
+                },
+                child: const Text('Tambah ke Keranjang'),
+              ),
+            ],
+          );
+        },
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -23,7 +74,7 @@ class DetailScreen extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('${product.name} ditambahkan ke favorit')),
               );
-              // Buka halaman favorit setelah menambah
+              // Hapus Navigator.pop(context) agar tidak menutup halaman detail
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const FavoriteScreen()),
@@ -37,7 +88,6 @@ class DetailScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Gambar (jika ada imageUrl, gunakan Image.asset, fallback ke emoji)
             Container(
               width: double.infinity,
               height: 300,
@@ -72,9 +122,7 @@ class DetailScreen extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
-                      onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('${product.name} ditambahkan ke keranjang')),
-                      ),
+                      onPressed: _showAddToCartDialog,
                       icon: const Icon(Icons.shopping_cart),
                       label: const Text('Beli Sekarang'),
                     ),

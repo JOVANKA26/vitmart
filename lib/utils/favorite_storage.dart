@@ -1,7 +1,7 @@
 // lib/utils/favorite_storage.dart
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/product.dart';
+import 'package:vitmart/models/product.dart';
 
 class FavoriteStorage {
   static const String _keyPrefix = 'favorites_'; // Prefix dengan userID
